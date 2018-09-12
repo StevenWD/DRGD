@@ -1,0 +1,54 @@
+{
+    "data": {
+        "train_file": "data/LCSTS/PART_I.xml",
+        "dev_file": "data/LCSTS/PART_II.xml",
+        "test_file": "data/LCSTS/PART_III.xml",
+        "emd_dim": 350,
+        "source_max_seq_length": 120,
+        "target_max_seq_length": 25,
+        "source_word_num": 10729,
+        "target_word_num": 10729,
+        "embedding_filepath": "data/LCSTS/emd_weight.npy"
+    },
+    "encoder": {
+        "cell_classname": "tensorflow.nn.rnn_cell.GRUCell",
+        "encoder_params": {},
+        "cell": {
+            "num_units": 500,
+            "cell_params": {}
+        }
+    },
+    "decoder": {
+        "cell_classname": "tensorflow.nn.rnn_cell.GRUCell",
+        "cell": {
+            "num_units": 500,
+            "cell_params": {}
+        },
+        "variable_size": 500,
+        "beam_search_width": 10
+    },
+    "model": {},
+    "base_dir": "/home/stevenwd/DRGD/",
+    "train_op": {
+        "name": "Adam",
+        "learning_rate": 0.001,
+        "params": {},
+        "lr_decay": {
+            "decay_type": "",
+            "decay_steps": 100,
+            "decay_rate": 0.99,
+            "start_decay_at": 0,
+            "stop_decay_at": "tf.int32.max",
+            "min_learning_rate": 1e-12,
+            "staircase": false
+        },
+        "clip_gradients": 5.0,
+        "sync_replicas": 0,
+        "sync_replicas_to_aggregate": 0
+    },
+    "train": {
+        "batch_size": 256,
+        "epoch_num": 1,
+        "metric_path": "metrics.rouge"
+    }
+}
