@@ -26,6 +26,7 @@ from __future__ import unicode_literals
 import itertools
 import numpy as np
 from pydoc import locate
+import json
 
 #pylint: disable=C0103
 
@@ -381,4 +382,6 @@ def compute_metric_score(metric_name, inference, gold, char_dict):
         inference_list.append(i_title)
         gold_list.append(g_title)
     metric_method = locate(metric_name)
+    json.dump(inference_list, open('./inference_list.json', 'w'), indent=4, ensure_ascii=False)
+    json.dump(gold_list, open('./gold_list.json', 'w'), indent=4, ensure_ascii=False)
     return metric_method(inference_list, gold_list)

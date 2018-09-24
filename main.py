@@ -23,14 +23,13 @@ if __name__=='__main__':
         preprocess(fname=config.base_dir+config.config['test_file'], mode='test', config=config)
 
     if result.train:
-        source_helper = Helper(data_filepath='./data/LCSTS/train_source.npy', mode='source')
-        target_input_helper = Helper(data_filepath='./data/LCSTS/train_target.npy', mode='target_input')
-        target_output_helper = Helper(data_filepath='./data/LCSTS/train_target.npy', mode='target_output')
-        valid_source_helper = Helper(data_filepath='./data/LCSTS/dev_source.npy', mode='source')
+        source_helper = Helper(data_filepath='./data/LCSTS/train_source.npy', length_filepath='./data/LCSTS/train_source_length.npy', mode='source')
+        target_input_helper = Helper(data_filepath='./data/LCSTS/train_target.npy', length_filepath='./data/LCSTS/train_target_length.npy', mode='target_input')
+        target_output_helper = Helper(data_filepath='./data/LCSTS/train_target.npy', length_filepath='./data/LCSTS/train_target_length.npy', mode='target_output')
+        valid_source_helper = Helper(data_filepath='./data/LCSTS/dev_source.npy', length_filepath='./data/LCSTS/dev_source_length.npy', mode='source')
         # valid_target_input_helper = Helper(data_filepath='./data/LCSTS/dev_target.npy', mode='target_input')
-        valid_target_output_helper = Helper(data_filepath='./data/LCSTS/dev_target.npy', mode='target_output')
-        char_dict = json.load(open(config.base_dir+'data/LCSTS/char_dict.json', 'r'))
- 
+        valid_target_output_helper = Helper(data_filepath='./data/LCSTS/dev_target.npy', length_filepath='./data/LCSTS/dev_target_length.npy', mode='target_output')
+        char_dict = json.load(open('./data/LCSTS/target_char_dict.json', 'r'))
         train(source_helper, target_input_helper, target_output_helper, valid_source_helper, valid_target_output_helper, char_dict)
 
     # if result.test:

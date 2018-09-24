@@ -4,11 +4,13 @@
         "dev_file": "data/LCSTS/PART_II.xml",
         "test_file": "data/LCSTS/PART_III.xml",
         "emd_dim": 350,
-        "source_max_seq_length": 120,
-        "target_max_seq_length": 25,
-        "source_word_num": 10729,
-        "target_word_num": 10729,
-        "embedding_filepath": "data/LCSTS/emd_weight.npy"
+        "source_max_seq_length": 121,
+        "target_max_seq_length": 26,
+        "source_word_num": 10607,
+        "target_word_num": 5437,
+        "embedding_filepath": "data/LCSTS/emd_weight.npy",
+        "source_embedding_filepath": "data/LCSTS/source_emd_weight.npy",
+        "target_embedding_filepath": "data/LCSTS/target_emd_weight.npy"
     },
     "encoder": {
         "cell_classname": "tensorflow.nn.rnn_cell.GRUCell",
@@ -36,8 +38,8 @@
         "lr_decay": {
             "decay_type": "",
             "decay_steps": 100,
-            "decay_rate": 0.99,
-            "start_decay_at": 0,
+            "decay_rate": 0.999,
+            "start_decay_at": 1000,
             "stop_decay_at": "tf.int32.max",
             "min_learning_rate": 1e-12,
             "staircase": false
@@ -48,7 +50,7 @@
     },
     "train": {
         "batch_size": 256,
-        "epoch_num": 1,
+        "epoch_num": 10,
         "metric_path": "metrics.rouge"
     }
 }

@@ -13,16 +13,17 @@ class DRGD(Configurable):
         self.name = name
 
     def build(self):
-        with tf.device('/gpu:1'):
-            with tf.name_scope('input') as scope:
-                self.source_placeholder = tf.placeholder(dtype=tf.int32, shape=(self.get_config('train', 'batch_size'), self.get_config('data', 'source_max_seq_length')), name='source_placeholder')
-                self.target_input_placeholder = tf.placeholder(dtype=tf.int32, shape=(self.get_config('train', 'batch_size'), self.get_config('data', 'target_max_seq_length')), name='target_input_placeholder')
-                self.target_output_placeholder = tf.placeholder(dtype=tf.int32, shape=(self.get_config('train', 'batch_size'), self.get_config('data', 'target_max_seq_length')), name='target_output_placeholder')
-                self.blank_input_placeholder = tf.placeholder(dtype=tf.float32, shape=(self.get_config('train', 'batch_size'), self.get_config('data', 'emd_dim')), name='blank_input_placeholder')
+        with tf.name_scope('placeholders') as scope:
+            self.source_placeholder = tf.placeholder(dtype=tf.int32, shape=(self.get_config('data', 'source_max_seq_length'), self.get_config('train', 'batch_size')), name='source_placeholder')
+            self.target_input_placeholder = tf.placeholder(dtype=tf.int32, shape=(self.get_config('train', 'batch_size'), self.get_config('data', 'target_max_seq_length')), name='target_input_placeholder')
+            self.target_output_placeholder = tf.placeholder(dtype=tf.int32, shape=(self.get_config('train', 'batch_size'), self.get_config('data', 'target_max_seq_length')), name='target_output_placeholder')
+            self.source_mask = tf.placeholder(dtype=tf.float32, shape=(self.get_config('train', 'batch_size'), self.get_config('data', 'source_max_seq_length')))
+            self.target_mask = tf.placeholder(dtype=tf.float32, shape=(self.get_config('train', 'batch_size'), self.get_config('data', 'target_max_seq_length')))
+            self.blank_input_placeholder = tf.placeholder(dtype=tf.float32, shape=(self.get_config('train', 'batch_size'), self.get_config('data', 'emd_dim')), name='blank_input_placeholder')
 
-        with tf.device('/gpu:0'):
-            with tf.name_scope('encoder') as scope:
-                self.encoder = Encoder()
 
-            with tf.name_scope('decoder') as scope:
-                self.decoder = Decoder(self.mode)
+        with tf.name_scope('encoder') as scope:
+            self.encoder = Encoder()
+
+        with tf.name_scope('decoder') as scope:
+            self.decoder = Decoder(self.mode)

@@ -44,6 +44,7 @@ def build_train_op(loss):
             global_step=tf.train.get_global_step(),
             learning_rate=config.config['learning_rate'],
             learning_rate_decay_fn=learning_rate_decay_fn,
+            # learning_rate_decay_fn=None,
             clip_gradients=_clip_gradients,
             optimizer=optimizer,
             summaries=['learning_rate', 'loss', 'gradients', 'gradient_norm'])
