@@ -15,11 +15,14 @@ def batch_gather(tensor, indices):
     Returns:
       output: A tensor of gathered values.
     """
+    # print(tensor.shape)
+    # print(indices.shape)
     shape = list(tensor.shape)
     flat_first = tf.reshape(tensor, [shape[0] * shape[1]] + shape[2:])
     indices = tf.convert_to_tensor(indices)
     offset_shape = [shape[0]] + [1] * (indices.shape.ndims - 1)
     offset = tf.reshape(tf.range(shape[0]) * shape[1], offset_shape)
+    # print(offset.shape)
     output = tf.gather(flat_first, indices + offset)
     return output
 
@@ -39,8 +42,8 @@ class Decoder(Configurable):
         # target_mask: (batch_size, target_max_seq_length)
 
         with tf.variable_scope('decoder', reuse=tf.AUTO_REUSE) as scope:
-            W_att = tf.get_variable(name='W_att', shape=[self.config['cell']['num_units']*2, self.config['cell']['num_units']], initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32)
-            b_att = tf.get_variable(name='b_att', shape=[self.config['cell']['num_units']], initializer=tf.zeros_initializer(), dtype=tf.float32)
+            # W_att = tf.get_variable(name='W_att', shape=[self.config['cell']['num_units']*2, self.config['cell']['num_units']], initializer=tf.contrib.layers.xavier_initializer(), dtype=tf.float32)
+            # b_att = tf.get_variable(name='b_att', shape=[self.config['cell']['num_units']], initializer=tf.zeros_initializer(), dtype=tf.float32)
             W_dy_zh = tf.get_variable(name='W_dy_zh', shape=[self.config['variable_size'], self.config['cell']['num_units']], dtype=tf.float32, initializer=tf.contrib.layers.xavier_initializer())
             W_dz_hh = tf.get_variable(name='W_dz_hh', shape=[self.config['cell']['num_units'], self.config['cell']['num_units']], dtype=tf.float32, initializer=tf.contrib.layers.xavier_initializer())
             b_dy_h = tf.get_variable(name='b_dy_h', shape=[self.config['cell']['num_units']], dtype=tf.float32, initializer=tf.zeros_initializer())
@@ -107,7 +110,7 @@ class Decoder(Configurable):
         last_output = tf.stack([blank_input for i in range(self.config['beam_search_width'])], axis=1)
         target_mask = tf.ones([batch_size, self.config['beam_search_width']], dtype=tf.float32)
 
-        y_s = list()
+        y_s = tf.zeros([batch_size, self.config['beam_search_width'], 0], dtype=tf.int32)
         for step in range(self.get_config(section='data', key='target_max_seq_length')):
 
             beam_state_1 = list()
@@ -145,9 +148,11 @@ class Decoder(Configurable):
             state_1 = batch_gather(beam_state_1, top_state)
             state_2 = batch_gather(beam_state_2, top_state)
             target_mask = tf.to_float(tf.not_equal(top_index, end_id))
-            y_s.append(top_index[:, 0])
-        y_s = tf.stack(y_s, axis=1)
-        return y_s
+            # y_s.append(top_index[:, 0])
+            y_s = tf.concat([batch_gather(y_s, top_state),
+                tf.expand_dims(top_index, axis=2)], axis=2)
+
+        return y_s[:, 0, :]
  
 
     def compute_attention_weight(self, state, hidden_states, source_mask):
