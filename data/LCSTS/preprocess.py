@@ -35,7 +35,8 @@ def build_dict(content_list, base_dir):
 
 def build_emd(char_dict, emd_dim, base_dir, mode):
     print('----build embedding matrix')
-    emd_weight = np.random.randn(len(char_dict), emd_dim).astype(np.float32)
+    emd_weight = np.zeros(shape=(1, emd_dim)).astype(np.float32)
+    emd_weight = np.concatenate((emd_weight, np.random.randn(len(char_dict)-1, emd_dim).astype(np.float32)), axis=0)
     np.save(base_dir+'data/LCSTS/'+mode+'_emd_weight.npy', emd_weight)
     embedding_filepath = 'data/LCSTS/'+mode+'_emd_weight.npy'
     return embedding_filepath
@@ -79,7 +80,7 @@ def preprocess(fname, mode, config):
                 feature.append(source_char_dict[c])
 
         feature.append(source_char_dict['<EOS>'])
-        source_length.append(len(feature))
+        source_length.append(min(len(feature), config.config['source_max_seq_length']))
         source.append(feature)
 
     source = pad_sequences(source,
@@ -96,7 +97,7 @@ def preprocess(fname, mode, config):
                 feature.append(target_char_dict[c])
 
         feature.append(target_char_dict['<EOS>'])
-        target_length.append(len(feature))
+        target_length.append(min(len(feature), config.config['target_max_seq_length']))
         target.append(feature)
 
     target = pad_sequences(target,

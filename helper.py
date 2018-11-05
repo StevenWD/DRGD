@@ -14,6 +14,9 @@ class Helper(Configurable):
         self.cursor = 0
 
     def next_batch(self):
+        # generate a mini-batch data
+        # if mode is 'target_input', we need to add a <START> token at the begining of target sequence
+        
         batch_size = self.get_config('train', 'batch_size')
         batch = self.data[self.cursor: min(self.data.shape[0], batch_size+self.cursor)]
         length = self.length[self.cursor: min(self.length.shape[0], batch_size+self.cursor)]
@@ -25,22 +28,11 @@ class Helper(Configurable):
             length = np.concatenate([length, supplement_length], axis=0)
             self.cursor -= self.data.shape[0]
 
-        if self.mode == 'source':
-            batch = np.transpose(batch)
-            mask = np.zeros((batch_size, self.config['source_max_seq_length']), dtype=np.float32)
-
         if self.mode == 'target_input':
-            char_dict = json.load(open(self.base_dir+'data/LCSTS/target_char_dict.json', 'r'))
-            batch[:, -1] = char_dict['<START>']
+            batch[:, -1] = self.config['start_id']
             batch = np.roll(batch, shift=1, axis=1)
 
-        if 'target' in self.mode:
-            mask = np.zeros((batch_size, self.config['target_max_seq_length']), dtype=np.float32)
-
-        for index in range(batch_size):
-            mask[index, :length[index]] = 1
-
-        return batch, mask
+        return batch, length
 
     def reset_cursor(self):
         self.cursor = 0

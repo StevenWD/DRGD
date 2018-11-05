@@ -1,33 +1,36 @@
 {
     "data": {
         "train_file": "data/LCSTS/PART_I.xml",
-        "dev_file": "data/LCSTS/PART_II.xml",
+        "dev_file": "data/LCSTS/PART_III.xml",
         "test_file": "data/LCSTS/PART_III.xml",
-        "emd_dim": 350,
-        "source_max_seq_length": 121,
-        "target_max_seq_length": 26,
+        "emd_dim": 200,
+        "source_max_seq_length": 120,
+        "target_max_seq_length": 30,
         "source_word_num": 10607,
         "target_word_num": 5437,
         "embedding_filepath": "data/LCSTS/emd_weight.npy",
         "source_embedding_filepath": "data/LCSTS/source_emd_weight.npy",
-        "target_embedding_filepath": "data/LCSTS/target_emd_weight.npy"
+        "target_embedding_filepath": "data/LCSTS/target_emd_weight.npy",
+        "start_id": 1,
+        "end_id": 2
     },
     "encoder": {
         "cell_classname": "tensorflow.nn.rnn_cell.GRUCell",
         "encoder_params": {},
         "cell": {
-            "num_units": 500,
+            "num_units": 128,
             "cell_params": {}
         }
     },
     "decoder": {
         "cell_classname": "tensorflow.nn.rnn_cell.GRUCell",
         "cell": {
-            "num_units": 500,
+            "num_units": 256,
             "cell_params": {}
         },
-        "variable_size": 500,
-        "beam_search_width": 10
+        "variable_size": 256,
+        "beam_search_width": 10,
+        "length_penalty_weight": 1
     },
     "model": {},
     "base_dir": "/home/stevenwd/DRGD/",
@@ -49,7 +52,7 @@
         "sync_replicas_to_aggregate": 0
     },
     "train": {
-        "batch_size": 256,
+        "batch_size": 928,
         "epoch_num": 10,
         "metric_path": "metrics.rouge"
     }

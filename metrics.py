@@ -369,14 +369,15 @@ def rouge(hypotheses, references):
 
 def compute_metric_score(metric_name, inference, gold, char_dict):
     reverse_char_dict = dict()
+    invalid_list = [char_dict['<PAD>'], char_dict['<EOS>']]
     for key, value in char_dict.items():
         reverse_char_dict[value] = key
 
     inference_list = list()
     gold_list = list()
     for index in range(inference.shape[0]):
-        i_title = ' '.join([reverse_char_dict[c] for c in inference[index]])
-        g_title = ' '.join([reverse_char_dict[c] for c in gold[index]])
+        i_title = ' '.join([reverse_char_dict[c] for c in inference[index] if c not in invalid_list])
+        g_title = ' '.join([reverse_char_dict[c] for c in gold[index] if c not in invalid_list])
         # print(i_title)
         # print(g_title)
         inference_list.append(i_title)
