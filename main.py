@@ -10,10 +10,10 @@ config = Configurable('data')
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--preprocess', help="preprocess train/dev/test data", action='store_true')
-    parser.add_argument('--train', help="train DRGD model", action='store_true')
-    parser.add_argument('--test', help="test trained DRGD model", action='store_true')
-    parser.add_argument('--inference', help="inference based model", action='store_true')
+    parser.add_argument('-p', '--preprocess', help="preprocess train/dev/test data", action='store_true')
+    parser.add_argument('-t', '--train', help="train DRGD model", action='store_true')
+    # parser.add_argument('--test', help="test trained DRGD model", action='store_true')
+    # parser.add_argument('--inference', help="inference based model", action='store_true')
     result = parser.parse_args()
 
     if result.preprocess:
