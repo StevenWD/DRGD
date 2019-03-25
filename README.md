@@ -1,5 +1,8 @@
 ## Deep Recurrent Generative Decoder for Abstractive Text Summarization
 
+#### Requirement
+Tensorflow 1.12
+
 #### Preprocess data
 
 ```python
